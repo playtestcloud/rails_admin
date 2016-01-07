@@ -48,9 +48,7 @@ module RailsAdmin
           def associated_collection(type)
             return [] if type.blank?
             config = RailsAdmin.config(type)
-            collection = config.abstract_model.all
-            collection = collection.instance_eval(&associated_collection_scope) if associated_collection_scope
-            collection.collect do |object|
+            config.abstract_model.all.collect do |object|
               [object.send(config.object_label_method), object.id]
             end
           end
@@ -69,11 +67,7 @@ module RailsAdmin
             types = associated_model_config.collect do |config|
               [config.abstract_model.model.name, config.abstract_model.to_param]
             end
-            if associated_collection_scope.nil?
-              ::Hash[*types.collect { |v| [v[0], bindings[:view].index_path(v[1])] }.flatten]
-            else
-              ::Hash[*types.collect { |v| [v[0], bindings[:view].index_path(v[1], additional_scope: {model: association.model.name, association: association.name, model_id: bindings[:object].id})] }.flatten]
-            end
+            ::Hash[*types.collect { |v| [v[0], bindings[:view].index_path(v[1])] }.flatten]
           end
 
           # Reader for field's value
