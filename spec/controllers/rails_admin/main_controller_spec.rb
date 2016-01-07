@@ -203,6 +203,7 @@ describe RailsAdmin::MainController, type: :controller do
 
       RailsAdmin.config Comment do
         field :commentable do
+
           associated_collection_scope do
             comment = bindings[:object]
             proc { |scope| scope.where(commentable_id: comment.commentable_id) }
@@ -210,7 +211,7 @@ describe RailsAdmin::MainController, type: :controller do
         end
       end
 
-      get :index, model_name: 'comment', format: :json, additional_scope: {association: 'commentable', model: 'Comment', model_id: Comment.last.id}
+      get :index, model_name: "comment", format: :json, additional_scope: { association: "commentable", model: "Comment", model_id: Comment.last.id}
       expect(JSON.parse(response.body).size).to eq(4)
     end
 
